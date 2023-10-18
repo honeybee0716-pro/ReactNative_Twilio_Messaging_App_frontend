@@ -1,11 +1,60 @@
-import React from "react";
-import { Button, Input, Stack, Text, Box, Flex, ScrollView } from "native-base";
+import React , {useState} from "react";
+import { Button, Input, Stack, Text, Box, Flex, ScrollView,useToast } from "native-base";
 import { TouchableOpacity} from "react-native";
+import axios from "axios";
 
 const LoginScreen = ({ navigation }) => {
   const [show, setShow] = React.useState(true);
 
   const handleClick = () => setShow(!show);
+  const toast = useToast();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const emailChangeHandler = text => {
+    setEmail(text);
+  };
+  
+  const passwordChangeHandler = text => {
+    setPassword(text);
+  };
+
+  const handleError = () =>
+  toast.show({
+    title: "Login error.!",
+    placement : "bottom"
+  });
+  const handleSuccess = () =>
+    toast.show({
+      title: "Login success.!",
+      placement : "bottom"
+    });
+
+  const handleSubmit = async () => {
+    axios
+    .post("http://149.154.158.249:5000/api/user/login", {
+      email: email,
+      password: password,
+    })
+    .then((response) => {
+      console.log('===========', response);
+      const { success} = response.data;
+      if (success) {
+        handleSuccess();
+        setEmail('');
+        setPassword('');
+        setTimeout(() => {
+          navigation.navigate("Footer");
+        }, 1000);
+      } else {
+        handleError();
+      }
+    })
+    .catch((error) => {
+      console.log('Error: ', error);
+    });
+  };
+
   return (
     <ScrollView>
     <Stack space={5} w="85%" maxW="100%" mx="auto">
@@ -22,10 +71,10 @@ const LoginScreen = ({ navigation }) => {
           </TouchableOpacity>
         </Box>
       </Flex>
-      <Input size="lg" variant="outline" placeholder="Email or Phone Number" />
+      <Input size="lg" variant="outline" placeholder="Email or Phone Number" value={email} onChangeText={text => emailChangeHandler(text)} />
       <Input
         size="lg"
-        type={show ? "text" : "password"}
+        type={show ? "text" : "password"} value={password} onChangeText={text => passwordChangeHandler(text)}
         InputRightElement={
           <Box flex={0.3} alignItems="center" justifyContent="center">
             <Text
@@ -44,9 +93,7 @@ const LoginScreen = ({ navigation }) => {
         marginTop="30%"
         size="lg"
         bg="rgba(93, 176, 117, 1)"
-        onPress={() => {
-          navigation.navigate("Footer");
-        }}
+        onPress={handleSubmit}
       >
         Log in
       </Button>
