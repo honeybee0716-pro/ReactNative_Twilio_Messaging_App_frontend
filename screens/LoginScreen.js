@@ -2,6 +2,7 @@ import React , {useState} from "react";
 import { Button, Input, Stack, Text, Box, Flex, ScrollView,useToast } from "native-base";
 import { TouchableOpacity} from "react-native";
 import axios from "axios";
+import { API_LOCAL_URL } from "../config/api";
 
 const LoginScreen = ({ navigation }) => {
   const [show, setShow] = React.useState(true);
@@ -32,7 +33,7 @@ const LoginScreen = ({ navigation }) => {
 
   const handleSubmit = async () => {
     axios
-    .post("http://149.154.158.249:5000/api/user/login", {
+    .post(`${API_LOCAL_URL}/user/login`, {
       email: email,
       password: password,
     })

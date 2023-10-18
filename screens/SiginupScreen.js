@@ -3,6 +3,7 @@ import { Button, Input, Stack, Text, Box, Flex, ScrollView, Toast, useToast} fro
 import { TouchableOpacity } from "react-native";
 import Checkbox from 'expo-checkbox';
 import axios from "axios";
+import { API_LOCAL_URL } from "../config/api";
 
 const SingupScreen = ({ navigation }) => {
   const [show, setShow] = useState(true);
@@ -43,7 +44,7 @@ const SingupScreen = ({ navigation }) => {
 
   const handleSubmit = async () => {
     axios
-    .post("http://149.154.158.249:5000/api/user/signup", {
+    .post(`${API_LOCAL_URL}/user/signup`, {
       firstName: firstName,
       lastName: lastName,
       email: email,
