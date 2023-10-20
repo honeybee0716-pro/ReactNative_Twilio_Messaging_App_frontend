@@ -43,7 +43,7 @@ const LoginScreen = ({ navigation }) => {
       password: password,
     })
     .then((response) => {
-      console.log('===========', response.data.message);
+      console.log('===========', response.data);
       const { success} = response.data;
       if (success) {
         handleSuccess(response.data.user.firstName);
