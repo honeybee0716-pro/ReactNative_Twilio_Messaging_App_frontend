@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {ScrollView, View,VStack, HStack, Heading, Stack, Center, Box, Text, Avatar} from "native-base";
 import HomeProfiles from "../components/HomeProfiles";
 import ChatList from "../components/ChatList";
 import SearchIcon from "../components/SearchIcon";
 import { Fontisto } from '@expo/vector-icons';
 import { TouchableOpacity } from "react-native";
+import axios from "axios";
+import { API_LOCAL_URL } from "../config/api";
 
 const HomeScreen = ({navigation}) => {
 
@@ -96,6 +98,14 @@ const HomeScreen = ({navigation}) => {
         "badge":3      }
     ]
   });
+
+  // useEffect(() => {
+  //   axios.get(`${API_LOCAL_URL}/customer`).then((response) =>{
+  //     setJsonData(response.data);
+  //   }).catch(error =>{
+  //     console.log(error);
+  //   });
+  // },[]);
 
   const handleRemove = (id) => {
     // Logic to remove the item with the given id from the JSON data

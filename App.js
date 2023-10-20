@@ -21,7 +21,7 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NativeBaseProvider>
-      <StatusBar barStyle="light-content" backgroundColor={'#203864'} />
+      <StatusBar barStyle="light-content" backgroundColor={'#5db075'} />
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Login">
           <Stack.Screen

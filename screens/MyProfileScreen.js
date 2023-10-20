@@ -107,7 +107,7 @@ const MyProfileScreen = ({ navigation }) => {
             width={"90%"}
             bg="rgba(93, 176, 117, 1)"
             onPress={() => {
-              navigation.navigate("Signup");
+              navigation.navigate("Login");
             }}
           >
             <Text fontSize={17} color={"white"}>

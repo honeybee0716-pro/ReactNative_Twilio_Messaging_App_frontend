@@ -31,14 +31,19 @@ const SingupScreen = ({ navigation }) => {
   const passwordChangeHandler = text => {
     setPassword(text);
   };
-  const handleError = () =>
+  const handleError = (error) =>
     toast.show({
-      title: "Signup error.!",
+      title: {error},
       placement : "bottom"
     });
-  const handleSuccess = () =>
+  const handleAxiosError = () =>
+  toast.show({
+    title: "There is a problem with your request or input.! ",
+    placement : "bottom"
+  });
+  const handleSuccess = (msg) =>
     toast.show({
-      title: "Signup success.!",
+      title: `Hello ${msg}. You have successfully registered.`,
       placement : "bottom"
     });
 
@@ -51,10 +56,10 @@ const SingupScreen = ({ navigation }) => {
       password: password,
     })
     .then((response) => {
-      console.log('===========', response);
+      console.log('===========', response.data);
       const { success} = response.data;
       if (success) {
-        handleSuccess();
+        handleSuccess(response.data.user.firstName);
         setFirstName('');
         setLastName('');
         setEmail('');
@@ -62,12 +67,13 @@ const SingupScreen = ({ navigation }) => {
         setTimeout(() => {
           navigation.navigate("Footer");
         }, 1000);
-      } else {
-        handleError();
+      }else{
+        handleAxiosError();
       }
     })
     .catch((error) => {
       console.log('Error: ', error);
+      handleError(error);
     });
   };
 

@@ -20,17 +20,21 @@ const LoginScreen = ({ navigation }) => {
     setPassword(text);
   };
 
-  const handleError = () =>
+  const handleError = (error) =>
   toast.show({
-    title: "Login error.!",
+    title: {error},
     placement : "bottom"
   });
-  const handleSuccess = () =>
+  const handleSuccess = (msg) =>
     toast.show({
-      title: "Login success.!",
+      title: `Hello ${msg}. You have successfully logged in.`,
       placement : "bottom"
     });
-
+  const handleAxiosError = () =>
+  toast.show({
+    title: "Your credentials are incorrect or a request error occurred.! ",
+    placement : "bottom"
+  });
   const handleSubmit = async () => {
     axios
     .post(`${API_LOCAL_URL}/user/login`, {
@@ -38,21 +42,22 @@ const LoginScreen = ({ navigation }) => {
       password: password,
     })
     .then((response) => {
-      console.log('===========', response);
+      console.log('===========', response.data);
       const { success} = response.data;
       if (success) {
-        handleSuccess();
+        handleSuccess(response.data.user.firstName);
         setEmail('');
         setPassword('');
         setTimeout(() => {
           navigation.navigate("Footer");
         }, 1000);
-      } else {
-        handleError();
+      }else{
+        handleAxiosError();
       }
     })
     .catch((error) => {
       console.log('Error: ', error);
+      handleError(error);
     });
   };
 
