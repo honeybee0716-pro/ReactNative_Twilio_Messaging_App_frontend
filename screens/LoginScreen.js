@@ -2,7 +2,7 @@ import React , {useState} from "react";
 import { Button, Input, Stack, Text, Box, Flex, ScrollView,useToast } from "native-base";
 import { TouchableOpacity} from "react-native";
 import axios from "axios";
-import { API_LOCAL_URL } from "../config/api";
+import { API_URL } from "../config/api";
 
 const LoginScreen = ({ navigation }) => {
   const [show, setShow] = React.useState(true);
@@ -20,11 +20,12 @@ const LoginScreen = ({ navigation }) => {
     setPassword(text);
   };
 
-  const handleError = (error) =>
-  toast.show({
-    title: {error},
-    placement : "bottom"
-  });
+  const handleError = () =>
+    toast.show({
+      title: "Server is not responding",
+      placement : "bottom"
+    });
+
   const handleSuccess = (msg) =>
     toast.show({
       title: `Hello ${msg}. You have successfully logged in.`,
@@ -37,12 +38,12 @@ const LoginScreen = ({ navigation }) => {
   });
   const handleSubmit = async () => {
     axios
-    .post(`${API_LOCAL_URL}/user/login`, {
+    .post(`${API_URL}/user/login`, {
       email: email,
       password: password,
     })
     .then((response) => {
-      console.log('===========', response.data);
+      console.log('===========', response.data.message);
       const { success} = response.data;
       if (success) {
         handleSuccess(response.data.user.firstName);
@@ -51,13 +52,12 @@ const LoginScreen = ({ navigation }) => {
         setTimeout(() => {
           navigation.navigate("Footer");
         }, 1000);
-      }else{
+      } else{
         handleAxiosError();
       }
-    })
-    .catch((error) => {
+    }).catch((error) => {
       console.log('Error: ', error);
-      handleError(error);
+      handleError();
     });
   };
 

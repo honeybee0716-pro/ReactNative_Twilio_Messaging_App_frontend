@@ -3,7 +3,7 @@ import { Button, Input, Stack, Text, Box, Flex, ScrollView, Toast, useToast} fro
 import { TouchableOpacity } from "react-native";
 import Checkbox from 'expo-checkbox';
 import axios from "axios";
-import { API_LOCAL_URL } from "../config/api";
+import { API_URL } from "../config/api";
 
 const SingupScreen = ({ navigation }) => {
   const [show, setShow] = useState(true);
@@ -31,9 +31,9 @@ const SingupScreen = ({ navigation }) => {
   const passwordChangeHandler = text => {
     setPassword(text);
   };
-  const handleError = (error) =>
+  const handleError = () =>
     toast.show({
-      title: {error},
+      title: "Server is not responding",
       placement : "bottom"
     });
   const handleAxiosError = () =>
@@ -49,7 +49,7 @@ const SingupScreen = ({ navigation }) => {
 
   const handleSubmit = async () => {
     axios
-    .post(`${API_LOCAL_URL}/user/signup`, {
+    .post(`${API_URL}/user/signup`, {
       firstName: firstName,
       lastName: lastName,
       email: email,
@@ -73,7 +73,7 @@ const SingupScreen = ({ navigation }) => {
     })
     .catch((error) => {
       console.log('Error: ', error);
-      handleError(error);
+      handleError();
     });
   };
 

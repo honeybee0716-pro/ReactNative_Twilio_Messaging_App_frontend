@@ -6,7 +6,7 @@ import SearchIcon from "../components/SearchIcon";
 import { Fontisto } from '@expo/vector-icons';
 import { TouchableOpacity } from "react-native";
 import axios from "axios";
-import { API_LOCAL_URL } from "../config/api";
+import { API_URL } from "../config/api";
 
 const HomeScreen = ({navigation}) => {
 
@@ -100,7 +100,7 @@ const HomeScreen = ({navigation}) => {
   });
 
   // useEffect(() => {
-  //   axios.get(`${API_LOCAL_URL}/customer`).then((response) =>{
+  //   axios.get(`${API_URL}/customer`).then((response) =>{
   //     setJsonData(response.data);
   //   }).catch(error =>{
   //     console.log(error);

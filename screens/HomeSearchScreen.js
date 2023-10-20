@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, SafeAreaView} from "react-native";
 import HomeSearchList from "../components/HomeSearchList";
 import SearchBar from "../components/SearchBar";
-import { API_LOCAL_URL } from "../config/api";
+import { API_URL } from "../config/api";
 
 const HomeSearchScreen = () => {
    const [searchPhrase, setSearchPhrase] = useState("");
@@ -22,7 +22,7 @@ const HomeSearchScreen = () => {
    // }, []);
 
   //  useEffect(() => {
-  //   axios.get(`${API_LOCAL_URL}/customer`).then((response) =>{
+  //   axios.get(`${API_URL}/customer`).then((response) =>{
   //     setFakeData(response.data);
   //   }).catch(error =>{
   //     console.log(error);
