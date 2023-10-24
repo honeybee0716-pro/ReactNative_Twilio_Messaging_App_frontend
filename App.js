@@ -14,7 +14,7 @@ import NewCustomerScreen from "./screens/NewCustomerScreen";
 import CustomersScreen from "./screens/CustomersScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 import ContactScreen from "./screens/ContactScreen";
-import ChatRoomScreen from "./screens/ChatRoomScreen";
+import SMSRoomScreen from "./screens/SMSRoomScreen";
 
 const Stack = createStackNavigator();
 
@@ -80,8 +80,8 @@ export default function App() {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name="ChatRoomScreen"
-            component={ChatRoomScreen}
+            name="SMSRoomScreen"
+            component={SMSRoomScreen}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

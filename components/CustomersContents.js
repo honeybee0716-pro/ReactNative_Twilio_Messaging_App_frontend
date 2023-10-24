@@ -22,7 +22,7 @@ const CustomersContents = ({
 
   const handleClick = () => {
     if (isLongClicked == false) {
-      navigation.navigate("CustomerProfileScreen");
+      navigation.navigate("CustomerProfileScreen", {id});
     }
     setIsLongClicked(false);
   };

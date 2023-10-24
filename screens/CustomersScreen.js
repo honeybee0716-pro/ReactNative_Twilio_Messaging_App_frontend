@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TouchableOpacity } from "react-native";
 import {
   ScrollView,
@@ -9,118 +9,42 @@ import {
   Stack,
   Center,
   Box,
+  Text,
+  Spinner
 } from "native-base";
 import CustomersContents from "../components/CustomersContents";
 import SearchIcon from "../components/SearchIcon";
 import AddIcon from "../components/AddIcon";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API_URL } from "../config/api";
 
 const CustomersScreen = ({ navigation }) => {
 
-  const [jsonData, setJsonData] = useState({
-    data: [
-      {
-        "id": 1,
-        "image_url": "../assets/avatars/avatar1.jpg",
-        "name": "John Doe",
-        "message": "Hello, this is the first message.",
-        "time":"2min ago",
-        "country":"United State",
-        "badge":3      },
-      {
-        "id": 2,
-        "image_url": "../assets/avatars/avatar2.jpg",
-        "name": "Jane Smith",
-        "message": "Hey there! Here's the second message.",
-        "time":"2min ago",
-        "country":"United Kingdom",
-        "badge":3      },
-      {
-        "id": 3,
-        "image_url": "../assets/avatars/avatar3.jpg",
-        "name": "Alex Johnson",
-        "message": "Greetings from the third message!",
-        "time":"2min ago",
-        "country":"Spain",
-        "badge":3      },
-      {
-        "id": 4,
-        "image_url": "../assets/avatars/avatar4.jpg",
-        "name": "Sarah Adams",
-        "message": "Just wanted to say hi!",
-        "time":"2min ago",
-        "country":"Germany",
-        "badge":3      },
-      {
-        "id": 5,
-        "image_url": "../assets/avatars/avatar5.jpg",
-        "name": "Michael Brown",
-        "message": "Hope you're having a great day!",
-        "time":"2min ago",
-        "country":"Turkey",
-        "badge":3      },
-      {
-        "id": 6,
-        "image_url": "../assets/avatars/avatar6.jpg",
-        "name": "Emily Davis",
-        "message": "Sending you warm wishes!",
-        "time":"2min ago",
-        "country":"United State",
-        "badge":3      },
-      {
-        "id": 7,
-        "image_url": "../assets/avatars/avatar1.jpg",
-        "name": "Robert Wilson",
-        "message": "Wishing you a fantastic week ahead!",
-        "time":"2min ago",
-        "country":"Australia",
-        "badge":3      },
-      {
-        "id": 8,
-        "image_url": "../assets/avatars/avatar2.jpg",
-        "name": "Olivia Lee",
-        "message": "Thinking of you!",
-        "time":"2min ago",
-        "country":"Norway",
-        "badge":3      },
-      {
-        "id": 9,
-        "image_url": "../assets/avatars/avatar3.jpg",
-        "name": "Daniel Clark",
-        "message": "Have a wonderful day!",
-        "time":"2min ago",
-        "country":"Island",
-        "badge":3      },
-      {
-        "id": 10,
-        "image_url": "../assets/avatars/avatar4.jpg",
-        "name": "Sophia Taylor",
-        "message": "Sending positive vibes your way!",
-        "time":"2min ago",
-        "country":"France",
-        "badge":3      },
-      {
-        "id": 11,
-        "image_url": "../assets/avatars/avatar5.jpg",
-        "name": "Matthew Hernandez",
-        "message": "Keep up the great work!",
-        "time":"2min ago",
-        "country":"Poland",
-        "badge":3      },
-      {
-        "id": 12,
-        "image_url": "../assets/avatars/avatar6.jpg",
-        "name": "Ava Martinez",
-        "message": "You're doing amazing!",
-        "time":"2min ago",
-        "country":"Argentina",
-        "badge":3      }
-    ]
-  });
+  const [customerData, setCustomerData] = useState(null);
+  const [isLoading, setLoading] = useState(true);
+
+  const fetchData = async () => {
+    const accessToken = await AsyncStorage.getItem("Authorization");
+    axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+    await axios.get(`${API_URL}/customer`).then((response) =>{
+      console.log("===> CUSTOMER_SCREEN",response.data.customers);
+      setCustomerData(response.data.customers);
+      setLoading(false);
+      return true
+    }).catch(error =>{
+      console.log(error);
+    });
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleRemove = (id) => {
     // Logic to remove the item with the given id from the JSON data
-    const newData = jsonData.data.filter((item) => item.id !== id);
-    setJsonData({ data: newData });
+    const newData = customerData.filter((item) => item._id !== id);
+    setCustomerData(newData);
   };
 
   const handleEdit = (id) => {
@@ -153,12 +77,6 @@ const CustomersScreen = ({ navigation }) => {
           </Heading>
         </Box>
 
-        {/* <Box
-          flex={0.1}
-          justifyContent="center"
-          flexDirection="row"
-          alignItems="flex-start"
-        ></Box> */}
         <Box flex={0.1}>
           <TouchableOpacity
             onPress={() => navigation.navigate("NewCustomerScreen")}
@@ -175,18 +93,20 @@ const CustomersScreen = ({ navigation }) => {
           height={"100%"}
         >
           <Stack mt="5" direction="column" width={"100%"}>
-            {jsonData.data.map((item) => (
-              <Center key={item.id} width={"100%"} marginTop={5}>
+            {customerData ? customerData.map((item) => (
+              <Center key={item._id} width={"100%"} marginTop={5}>
                 <CustomersContents
-                  id = {item.id}
-                  name={item.name}
-                  avatarName={item.name.charAt(0)}
-                  country={item.country}
+                  id = {item._id}
+                  name={item.firstName + ' '+ item.lastName}
+                  avatarName={item.firstName.charAt(0)+item.lastName.charAt(0)}
+                  country={item.location[0].country}
                   onRemove={handleRemove}
                   onEdit={handleEdit}
                 />
               </Center>
-            ))}
+            )) : (isLoading ? <HStack space={2} justifyContent="center" alignItems="center">
+            <Spinner color="rgba(93, 176, 117, 1)" size="lg" /> 
+          </HStack> : <HStack space={2} justifyContent="center" alignItems="center"><Text fontSize={20} color={"rgba(93, 176, 117, 1)"}>No data</Text></HStack>)}
             <Center width={"100%"} bg={"white"} height={150}></Center>
           </Stack>
         </View>

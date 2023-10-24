@@ -24,7 +24,7 @@ const ChatList = ({
 
   const handleClick = () => {
     setIsLongClicked(false);
-    navigation.navigate("ChatRoomScreen");
+    navigation.navigate("SMSRoomScreen", {id});
   };
 
   return (

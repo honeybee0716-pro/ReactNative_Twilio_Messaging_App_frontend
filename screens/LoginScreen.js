@@ -2,6 +2,7 @@ import React , {useState} from "react";
 import { Button, Input, Stack, Text, Box, Flex, ScrollView,useToast } from "native-base";
 import { TouchableOpacity} from "react-native";
 import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from "../config/api";
 
 const LoginScreen = ({ navigation }) => {
@@ -38,15 +39,16 @@ const LoginScreen = ({ navigation }) => {
   });
   const handleSubmit = async () => {
     axios
-    .post(`${API_URL}/user/login`, {
+    .post(`${API_URL}/client/login`, {
       email: email,
       password: password,
     })
-    .then((response) => {
-      console.log('===========', response.data);
+    .then(async (response) => {
+      console.log('===> LOGIN', response.data);
       const { success} = response.data;
       if (success) {
         handleSuccess(response.data.user.firstName);
+        await AsyncStorage.setItem("Authorization", response.data.accessToken);
         setEmail('');
         setPassword('');
         setTimeout(() => {

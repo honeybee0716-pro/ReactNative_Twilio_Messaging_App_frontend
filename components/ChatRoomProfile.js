@@ -4,7 +4,7 @@ import { TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 
-const ChatRoomProfile = ({ image, name, message, time, badge }) => {
+const ChatRoomProfile = ({ image, name, message, avatarName, badge }) => {
   const navigation = useNavigation();
 
   const handleClick = () => {
@@ -19,7 +19,7 @@ const ChatRoomProfile = ({ image, name, message, time, badge }) => {
         </TouchableOpacity>
         </Box>
 
-        <Avatar bg="amber.500" source={image} size="lg">
+        <Avatar bg="indigo.500" source={image} size="lg">{avatarName}
           <Avatar.Badge bg="green.500" size="1/4" />
         </Avatar>
         <Flex

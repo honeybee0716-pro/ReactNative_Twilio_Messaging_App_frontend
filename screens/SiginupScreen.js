@@ -3,7 +3,9 @@ import { Button, Input, Stack, Text, Box, Flex, ScrollView, Toast, useToast} fro
 import { TouchableOpacity } from "react-native";
 import Checkbox from 'expo-checkbox';
 import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from "../config/api";
+
 
 const SingupScreen = ({ navigation }) => {
   const [show, setShow] = useState(true);
@@ -49,17 +51,18 @@ const SingupScreen = ({ navigation }) => {
 
   const handleSubmit = async () => {
     axios
-    .post(`${API_URL}/user/signup`, {
+    .post(`${API_URL}/client/signup`, {
       firstName: firstName,
       lastName: lastName,
       email: email,
       password: password,
     })
-    .then((response) => {
-      console.log('===========', response.data);
+    .then(async (response) => {
+      console.log('===> SIGNUP', response.data);
       const { success} = response.data;
       if (success) {
         handleSuccess(response.data.user.firstName);
+        await AsyncStorage.setItem("Authorization", response.data.accessToken);
         setFirstName('');
         setLastName('');
         setEmail('');
