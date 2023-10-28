@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,useContext} from "react";
 import { TouchableOpacity } from "react-native";
 import {
   ScrollView,
@@ -14,15 +14,17 @@ import {
 } from "native-base";
 import CustomersContents from "../components/CustomersContents";
 import SearchIcon from "../components/SearchIcon";
-import AddIcon from "../components/AddIcon";
+import AddCustomer from "../components/AddCustomer";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "../config/api";
+import StatusContext from "../context/StatusContext";
 
 const CustomersScreen = ({ navigation }) => {
 
   const [customerData, setCustomerData] = useState(null);
   const [isLoading, setLoading] = useState(true);
+  const { status, setStatus } = useContext(StatusContext);
 
   const fetchData = async () => {
     const accessToken = await AsyncStorage.getItem("Authorization");
@@ -39,7 +41,7 @@ const CustomersScreen = ({ navigation }) => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [status]);
 
   const handleRemove = (id) => {
     // Logic to remove the item with the given id from the JSON data
@@ -81,7 +83,7 @@ const CustomersScreen = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => navigation.navigate("NewCustomerScreen")}
           >
-            <AddIcon />
+            <AddCustomer />
           </TouchableOpacity>
         </Box>
       </HStack>
@@ -93,7 +95,7 @@ const CustomersScreen = ({ navigation }) => {
           height={"100%"}
         >
           <Stack mt="5" direction="column" width={"100%"}>
-            {customerData ? customerData.map((item) => (
+            {customerData && customerData.length ? customerData.map((item) => (
               <Center key={item._id} width={"100%"} marginTop={5}>
                 <CustomersContents
                   id = {item._id}

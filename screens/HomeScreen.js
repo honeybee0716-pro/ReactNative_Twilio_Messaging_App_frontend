@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,useContext} from "react";
 import {ScrollView, View,VStack, HStack, Heading, Stack, Center, Box, Text,Spinner, Avatar} from "native-base";
 import HomeProfiles from "../components/HomeProfiles";
 import ChatList from "../components/ChatList";
@@ -8,11 +8,13 @@ import { TouchableOpacity } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "../config/api";
+import StatusContext from "../context/StatusContext";
 
 const HomeScreen = ({navigation}) => {
 
   const [customerData, setcustomerData] = useState(null);
   const [isLoading, setLoading] = useState(true);
+  const { status, setStatus } = useContext(StatusContext);
 
   const fetchData = async () => {
     const accessToken = await AsyncStorage.getItem("Authorization");
@@ -29,7 +31,7 @@ const HomeScreen = ({navigation}) => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [status]);
 
   const handleRemove = (id) => {
     // Logic to remove the item with the given id from the JSON data
@@ -67,7 +69,7 @@ const HomeScreen = ({navigation}) => {
         </HStack>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} width={"100%"}>
           <Stack  direction="row" mb="3%"  space={3} marginX={5}>
-            {customerData && customerData.map((item) =>(
+            {customerData && customerData.length && customerData.map((item) =>(
               <Center key={item._id}  size="20">
                 <HomeProfiles id={item._id} name={item.firstName} avatarName={item.firstName.charAt(0)+item.lastName.charAt(0)}/>
               </Center>
@@ -77,15 +79,15 @@ const HomeScreen = ({navigation}) => {
         <ScrollView nestedScrollEnabled={true} width={"100%"}>
           <View overflow={"hidden"} borderTopRadius={50} bg="white">
             <Stack mt="5" direction="column"  width={"100%"}>
-              {customerData ? customerData.map((item) => (
+              {customerData && customerData.length ? customerData.map((item) => (
                 <Center key={item._id} width={"100%"} marginTop={5} marginLeft={"7%"}>
                   <ChatList
                     id = {item._id}
                     name={item.firstName + ' '+ item.lastName}
                     avatarName={item.firstName.charAt(0)+item.lastName.charAt(0)}
                     message={item.email}
-                    time="3 min ago"
-                    badge="2"
+                    // time="3 min ago"
+                    // badge="2"
                     onRemove={handleRemove}
                     onEdit={handleEdit} 
                   />

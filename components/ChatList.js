@@ -119,7 +119,7 @@ const ChatList = ({
                 <Text fontSize="12">{time}</Text>
               </Box>
               <Box flex={1} marginTop={"3%"}>
-                <Badge
+                {/* <Badge
                   bg="rgba(93, 176, 117, 1)"
                   rounded="full"
                   variant="solid"
@@ -128,7 +128,7 @@ const ChatList = ({
                   }}
                 >
                   {badge}
-                </Badge>
+                </Badge> */}
               </Box>
             </Flex>
           </HStack>

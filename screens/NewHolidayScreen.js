@@ -25,36 +25,20 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "../config/api";
 import StatusContext from "../context/StatusContext";
 
-
-const NewCustomerScreen = ({ navigation }) => {
+const NewHolidayScreen = ({ navigation }) => {
   const previous = useNavigation();
-  const [selectedBirthDay, setSelectedBirthDay] = useState(new Date())
-  const [birthDayPickerVisible, setBirthDayPickerVisible] = useState(false)
-  const [locationId, setLocationId] = useState([])
-  const [locationIdData, setLocationIdData] =useState([])
-  const { status, setStatus } = useContext(StatusContext);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const toast = useToast();
+  const [datePickerVisible, setDatePickerVisible] = useState(false);
+  const [locationId, setLocationId] =useState([])
+  const [locationIdData, setLocationIdData] =useState([])
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    segment: ''
+    title: '',
+    description: ''
   });
-
-  const handleChange = (field, value) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [field]: value,
-    }));
-  };
+  const { status, setStatus } = useContext(StatusContext);
   const toggleStatus = () => {
     setStatus(!status);
-  };
-
-
-  const handleButtonPress = () => {
-    previous.goBack();
   };
   const fetchLocationData = async () => {
     const accessToken = await AsyncStorage.getItem("Authorization");
@@ -72,11 +56,34 @@ const NewCustomerScreen = ({ navigation }) => {
     fetchLocationData();
   }, []);
 
-  const birthday = new Date(selectedBirthDay.getFullYear(), selectedBirthDay.getMonth(), selectedBirthDay.getDate()).toISOString();
-  console.log(formData, locationId, birthday);
+  const handleChange = (field, value) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [field]: value,
+    }));
+  };
+
+const holidayDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate()).toISOString();
+  const handleButtonPress = () => {
+    previous.goBack();
+  };
+
+  const showDatePicker = () => {
+    setDatePickerVisible(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisible(false);
+  };
+
+  const handleConfirm = (date) => {
+    setSelectedDate(date);
+    hideDatePicker();
+  };
+
   const handleSuccess = (msg) =>
   toast.show({
-    title: `The customer has been created successfully.`,
+    title: `The holiday has been created successfully.`,
     placement : "bottom"
   });
 
@@ -91,31 +98,13 @@ const NewCustomerScreen = ({ navigation }) => {
     title: "Server is not responding",
     placement : "bottom"
   });
-
-
-  const showBirthDayPicker = () => {
-    setBirthDayPickerVisible(true);
-  };
-
-  const hideBirthDayPicker = () => {
-    setBirthDayPickerVisible(false);
-  };
-
-  const handleBirthConfirm = (date) => {
-    setSelectedBirthDay(date);
-    hideBirthDayPicker();
-  };
   const handleSubmit = async () => {
     axios
-    .post(`${API_URL}/customer`, {
-      firstName:formData.firstName ,
-      lastName: formData.lastName,
-      email: formData.email,
-      phone: formData.phone,
-      segment: formData.segment,
-      location_id:locationId,
-      birthday:birthday
-
+    .post(`${API_URL}/holiday`, {
+      location_id: locationId,
+      title: formData.title,
+      description: formData.description,
+      date : holidayDate,
     })
     .then(async (response) => {
       console.log('===> NEW HOLIDAY', response.data.status);
@@ -147,14 +136,14 @@ const NewCustomerScreen = ({ navigation }) => {
       h="100%"
       bg="rgba(93, 176, 117, 1)"
     >
-
       <DateTimePickerModal
-        date={selectedBirthDay}
-        isVisible={birthDayPickerVisible}
+        date={selectedDate}
+        isVisible={datePickerVisible}
         mode="date"
-        onConfirm={handleBirthConfirm}
-        onCancel={hideBirthDayPicker}
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
       />
+
       <HStack marginTop={"2%"}>
         <Flex flex={0.1} alignItems={"flex-end"} justifyContent={"center"}>
           <TouchableOpacity onPress={handleButtonPress}>
@@ -163,12 +152,12 @@ const NewCustomerScreen = ({ navigation }) => {
         </Flex>
         <Flex flex={0.8} justifyContent={"center"} alignItems={"center"}>
           <Text bold fontSize={20} color={"white"}>
-            New Customer
+            New Holiday
           </Text>
         </Flex>
         <Flex flex={0.1}></Flex>
       </HStack>
-      <ScrollView style={{ width: "100%" }}>
+
         <Stack
           w="100%"
           h="100%"
@@ -177,74 +166,39 @@ const NewCustomerScreen = ({ navigation }) => {
           borderTopRadius={50}
           marginTop={"3%"}
         >
-          <VStack alignItems="center" space={5} w="100%" h="100%">
-            <Center
-              w="140"
-              h="140"
-              bg="gray.200"
-              rounded="full"
-              shadow={3}
-              zIndex={999}
-              marginTop="10%"
-            />
-            <Flex alignItems="center" direction="row" width={"90%"}>
-              <Box flex={1}>
-                <Input
-                  size="lg"
-                  bg="gray.100"
-                  placeholder="First Name"
-                  rounded={"full"}
-                  value={formData.firstName}
-          onChangeText={(value) => handleChange('firstName', value)}
-                />
-              </Box>
-              <Box flex={0.1}></Box>
-              <Box flex={1}>
-                <Input
-                  size="lg"
-                  bg="gray.100"
-                  placeholder="Last Name"
-                  rounded={"full"}
-                  value={formData.lastName}
-                  onChangeText={(value) => handleChange('lastName', value)}
-                />
-              </Box>
-            </Flex>
-
-            <Center width={"90%"}>
+          <VStack alignItems="center" space={5} w="100%" h="100%" marginTop={20}>
+          <Center width={"90%"}>
               <Input
                 size="lg"
                 bg="gray.100"
-                placeholder="Email"
+                placeholder="Title"
                 rounded={"full"}
-                value={formData.email}
-                  onChangeText={(value) => handleChange('email', value)}
+                value={formData.title}
+                  onChangeText={(value) => handleChange('title', value)}
               />
             </Center>
             <Center width={"90%"}>
               <Input
                 size="lg"
                 bg="gray.100"
-                placeholder="Phone number"
+                placeholder="Description"
                 rounded={"full"}
-                value={formData.phone}
-                onChangeText={(value) => handleChange('phone', value)}
+                value={formData.description}
+                onChangeText={(value) => handleChange('description', value)}
               />
             </Center>
             <Center width={"90%"}>
-
               <Input
                 size="lg"
                 bg="gray.100"
-                placeholder="Birthday"
                 value={
-                  selectedBirthDay
-                    ? selectedBirthDay.toLocaleDateString()
+                  selectedDate
+                    ? selectedDate.toLocaleDateString()
                     : "No date selected"
                 }
                 rounded={"full"}
                 InputRightElement={
-                  <Pressable onPress={showBirthDayPicker}>
+                  <Pressable onPress={showDatePicker}>
                     <Icon
                       as={<Feather name="calendar" size={24} color="black" />}
                       size={6}
@@ -253,16 +207,6 @@ const NewCustomerScreen = ({ navigation }) => {
                     />
                   </Pressable>
                 }
-              />
-            </Center>
-            <Center width={"90%"}>
-              <Input
-                size="lg"
-                bg="gray.100"
-                placeholder="Segment"
-                rounded={"full"}
-                value={formData.segment}
-                onChangeText={(value) => handleChange('segment', value)}
               />
             </Center>
             <Center width={"90%"}>
@@ -287,23 +231,23 @@ const NewCustomerScreen = ({ navigation }) => {
 
               </Select>
             </Center>
-            <Center width={"90%"} marginTop={"25%"}>
+            <Center width={"90%"}>
               <Button
-                onPress={handleSubmit}
                 rounded={25}
-                marginBottom="10"
+                marginTop="80%"
                 size="lg"
                 bg="rgba(93, 176, 117, 1)"
                 width={"100%"}
+                onPress={handleSubmit}
               >
                 Save
               </Button>
             </Center>
           </VStack>
+
         </Stack>
-      </ScrollView>
     </VStack>
   );
 };
 
-export default NewCustomerScreen;
+export default NewHolidayScreen;

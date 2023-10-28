@@ -12,14 +12,17 @@ import MyProfileScreen from "./screens/MyProfileScreen";
 import CustomerProfileScreen from "./screens/CustomerProfileScreen";
 import NewCustomerScreen from "./screens/NewCustomerScreen";
 import CustomersScreen from "./screens/CustomersScreen";
-import SettingsScreen from "./screens/SettingsScreen";
+import HolidayScreen from "./screens/HolidayScreen";
 import ContactScreen from "./screens/ContactScreen";
 import SMSRoomScreen from "./screens/SMSRoomScreen";
+import NewHolidayScreen from "./screens/NewHolidayScreen";
+import StatusProvider from "./context/StatusProvider";
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
+    <StatusProvider>
     <NativeBaseProvider>
       <StatusBar barStyle="light-content" backgroundColor={'#5db075'} />
       <NavigationContainer>
@@ -70,8 +73,13 @@ export default function App() {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name="SettingsScreen"
-            component={SettingsScreen}
+            name="HolidayScreen"
+            component={HolidayScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="NewHolidayScreen"
+            component={NewHolidayScreen}
             options={{ headerShown: false }}
           />
           <Stack.Screen
@@ -87,5 +95,6 @@ export default function App() {
         </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>
+    </StatusProvider>
   );
 }

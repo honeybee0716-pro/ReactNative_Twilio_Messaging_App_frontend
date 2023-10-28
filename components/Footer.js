@@ -1,5 +1,5 @@
 import React from "react";
-import SettingsScreen from "../screens/SettingsScreen";
+import HolidayScreen from "../screens/HolidayScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import CustomersScreen from "../screens/CustomersScreen";
 import HomeScreen from "../screens/HomeScreen";
@@ -23,11 +23,11 @@ export default function Footer() {
           <Feather  name="users" color={color} size={size} />
         ),
       }}/>
-      <Tab.Screen name="Settings" component={SettingsScreen} 
+      <Tab.Screen name="Holiday" component={HolidayScreen} 
       options={{
-        tabBarLabel: 'Settings',
+        tabBarLabel: 'Holiday',
         tabBarIcon: ({ color, size }) => (
-          <AntDesign  name="setting" color={color} size={size} />
+          <AntDesign  name="calendar" color={color} size={size} />
         ),
       }}/>
     </Tab.Navigator>

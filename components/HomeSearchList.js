@@ -22,19 +22,10 @@ const Item = ({ name, avatarName, message, time, badge, id, image }) => (
       </Flex>
       <Flex alignItems="flex-end" direction="column" width={"22%"}>
         <Box flex={1} marginTop={"4%"}>
-          <Text fontSize="12">{time}</Text>
+
         </Box>
         <Box flex={1} marginTop={"3%"}>
-          <Badge
-            bg="rgba(93, 176, 117, 1)"
-            rounded="full"
-            variant="solid"
-            _text={{
-              fontSize: 10,
-            }}
-          >
-            {badge}
-          </Badge>
+
         </Box>
       </Flex>
     </HStack>
@@ -52,8 +43,7 @@ const HomeSearchList = ({ searchPhrase, setClicked, data }) => {
           id={item._id}
           avatarName={item.firstName.charAt(0)+item.lastName.charAt(0)}
           message={item.email}
-          time="3 min ago"
-          badge="2"
+
         />
       );
     }
@@ -69,8 +59,7 @@ const HomeSearchList = ({ searchPhrase, setClicked, data }) => {
           id={item._id}
           avatarName={item.firstName.charAt(0)+item.lastName.charAt(0)}
           message={item.email}
-          time="3 min ago"
-          badge="2"
+
         />
       );
     }
@@ -86,8 +75,7 @@ const HomeSearchList = ({ searchPhrase, setClicked, data }) => {
           id={item._id}
           avatarName={item.firstName.charAt(0)+item.lastName.charAt(0)}
           message={item.email}
-          time="3 min ago"
-          badge="2"
+
         />
       );
     }
